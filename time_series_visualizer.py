@@ -33,14 +33,11 @@ def draw_bar_plot():
     months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
 
     # Draw bar plot
-    fig, ax = plt.subplots(figsize=(8, 5))
-    sns.barplot(data=df_bar, x='year', hue='month', y='value', palette='bright', width=0.5)
-
-    handles, _ = ax.get_legend_handles_labels()
-    ax.legend(handles, months, title='Months')
-    plt.xlabel('Years')
-    plt.xticks(rotation=90)
-    plt.ylabel('Average Page Views')
+    fig, ax = plt.subplots()
+    df_bar.unstack().plot(kind='bar', ax=ax)
+    ax.legend(months, title='Months')
+    ax.set_xlabel('Years')
+    ax.set_ylabel('Average Page Views')
 
     # Save image and return fig (don't change this part)
     fig.savefig('bar_plot.png')
@@ -60,7 +57,8 @@ def draw_box_plot():
     sns.set_palette("bright")
     sns.boxplot(ax=axes[0], data=df_box, x='year', y='value', hue='year', flierprops={"marker": "|"}, legend=False)
     sns.boxplot(ax=axes[1], data=df_box, x='month', y='value', hue='month', flierprops={"marker": "|"}, legend=False, order=order)
-
+    axes[0].set(xlabel='Year', ylabel='Page Views', title='Year-wise Box Plot (Trend)')
+    axes[1].set(xlabel='Month', ylabel='Page Views', title='Month-wise Box Plot (Seasonality)')
 
 
 
