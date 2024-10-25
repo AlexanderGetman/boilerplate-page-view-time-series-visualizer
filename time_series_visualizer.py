@@ -28,13 +28,19 @@ def draw_line_plot():
 
 def draw_bar_plot():
     # Copy and modify data for monthly bar plot
-    df_bar = None
+    df_bar = df.groupby([df.index.year,df.index.month]).mean()
+    df_bar.index.names = ['year', 'month']
+    months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
 
     # Draw bar plot
+    fig, ax = plt.subplots(figsize=(8, 5))
+    sns.barplot(data=df_bar, x='year', hue='month', y='value', palette='bright', width=0.5)
 
-
-
-
+    handles, _ = ax.get_legend_handles_labels()
+    ax.legend(handles, months, title='Months')
+    plt.xlabel('Years')
+    plt.xticks(rotation=90)
+    plt.ylabel('Average Page Views')
 
     # Save image and return fig (don't change this part)
     fig.savefig('bar_plot.png')
@@ -47,8 +53,13 @@ def draw_box_plot():
     df_box['year'] = [d.year for d in df_box.date]
     df_box['month'] = [d.strftime('%b') for d in df_box.date]
 
+    order = df_box['month'].unique().tolist()
+    order = order[8:] + order[0:8]
     # Draw box plots (using Seaborn)
-
+    fig, axes = plt.subplots(1, 2, figsize=(15,5))
+    sns.set_palette("bright")
+    sns.boxplot(ax=axes[0], data=df_box, x='year', y='value', hue='year', flierprops={"marker": "|"}, legend=False)
+    sns.boxplot(ax=axes[1], data=df_box, x='month', y='value', hue='month', flierprops={"marker": "|"}, legend=False, order=order)
 
 
 
